@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guess the number Game</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body class="container">
+  <input type="hidden" id="answer">
+  <input type="hidden" id="attempts">
+
+<div class="row">
+  <div class="heading-section">
+    <h1>Guess The Number Game</h1>
+    <hr>
+    <h1>? ? ? ?</h1>  
+  </div>
+  
+</div>
+
+<div class="main">
+  <div class="row">
+  <div class="col-sm-offset-3 col-sm-6 col-sm-offset-3 guess-box">
+    <input type="number" id="user-input" class="form-control" name="">
+    <button id="btn-guess" class="btn btn-primary" onclick="checkNumber()">Guess the Number</button>  
+    <button id="btn-replay" class="btn btn-primary" onclick="window.location.reload()">Play Again</button>  
+  </div>
+  
+</div>
+<div class="row">
+  <div id="msg"></div>
+</div>
+
+<div class="row">
+  <div class="col-sm-offset-3 col-sm-6 col-sm-offset-3">
+    <table class="table table-responsive table-striped table-bordered" id="results">
+      <tr>
+        <th>Guess</th>
+        <th>Result</th>
+      </tr>
+    </table>
+  </div>
+  
+</div>
+</div>
+<div class="row instructions">
+    <div class="col-md-6">
+      <div class="row">
+        <h2 class="text-primary">Target</h2>
+        <p>Guess the 4-digit number correctly.</p>  
+      </div>
+      <div class="row">
+        <h2 class="text-primary">Game Rules</h2>
+        <ul>
+          <li>Guess must be 4-digit number</li>
+          <li>You win only if your guess is an exact match</li>
+          <li>A Number can appear more than once</li>
+          <li>Maximum 10 guesses.</li>
+          <li><i class="fa fa-check text-success"></i> : Number is in the correct position</li>
+          <li><i class="fa fa-exchange text-warning"></i> : Number is part of the code, but not in the right position</li>
+          <li><i class="fa fa-times text-danger"></i> : Number is not part of the code</li>
+        </ul>
+      </div>    
+    </div>
+  </div>
+  
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col">Copyright©2018. All rights reserved.</div>
+          <div class="col float-right">Developer, ANAND KUMAR</div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </footer>
+  <script>
+    function checkNumber() {
+  var answer = document.getElementById("answer").value;
+  var attempt = document.getElementById("attempts").value;
+
+  var userInput = document.getElementById("user-input").value;
+  var msg = document.getElementById("msg");
+  var results = document.getElementById("results");
+
+  if(!answer) {
+    answer = generateRandomAnswer();
+    document.getElementById("answer").value = answer;
+  }
+  
+  if(!attempt){
+    attempt = 0;
+  }
+
+  if(!validateInput(userInput)) {
+    msg.innerHTML = "<p class='text-danger'>Number should be 4-digit long </p>";
+    return;
+  } else {
+    msg.innerHTML = "";
+    attempt++;
+    document.getElementById("attempts").value = attempt;
+  }
+
+  // Main Logic
+  var html = '<tr><td>' + userInput + '</td><td>'
+  for(let i=0; i < userInput.length; i++) {
+    if(userInput[i] == answer[i]) {
+      html = html + '<i class="fa fa-check text-success" style="padding: 3px;"></i>';
+    } else if(answer.indexOf(userInput[i]) > -1) {
+      // show Exchange icon
+      html = html + '<i class="fa fa-exchange text-warning" style="padding: 3px;"></i>';
+    } else {
+      // not found
+      html = html + '<i class="fa fa-times text-danger" style="padding: 3px;"></i>';
+    }
+  }
+  html = html + '</td></tr>';
+  results.innerHTML += html;
+  
+  if(answer === userInput) {
+    //User is a winner
+    msg.innerHTML = "<p class='msg-sucess'>Wooohhooo, You are a born Winner </p>";
+    document.getElementById("btn-guess").style = "display:none;";
+    document.getElementById("btn-replay").style = "display:block;";
+  } else if(attempt >= 10){
+    //Stop user from entering any more Guesses
+    msg.innerHTML = "<p class='text-danger'>Sorry, You lost. Please play again to win. </p>";
+    document.getElementById("btn-guess").style = "display:none;";
+    document.getElementById("btn-replay").style = "display:block;";
+  } else {
+    //show user that Input number is Incorrect.
+    msg.innerHTML = "<p class='text-primary'>Incorrect guess. Try again! </p>";
+  }
+
+}
+
+function generateRandomAnswer() {
+  // below will return a random number of 1000-9999 range
+  var num = (Math.floor(Math.random() * 8900)+1000).toString();
+  return num;
+}
+
+function validateInput(str) { 
+  if(str.length == 4)
+    return true;
+  else
+    return false;
+}
+  </script>
+</body>
+</html>
